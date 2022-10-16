@@ -42,15 +42,19 @@ def check():
         #print("1.Signup")
         print("1.Login")
         print("2.Download")
-        ch = int(input("Enter your choice: "))
-        #if ch == 1:
-        #    signup()
-        if ch == 1:
-            authenticated = login()
-        elif ch == 2:
-            if authenticated:
-                download_images()
+        try:
+            ch = int(input("Enter your choice: "))
+
+            #if ch == 1:
+            #    signup()
+            if ch == 1:
+                authenticated = login()
+            elif ch == 2:
+                if authenticated:
+                    download_images()
+                else:
+                    print("You are unauthorized")
             else:
-                print("You are unauthorized")
-        else:
+                print("Wrong Choice!")
+        except (ValueError, UnboundLocalError):
             print("Wrong Choice!")
