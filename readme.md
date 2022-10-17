@@ -1,8 +1,8 @@
 # Welcome to the Image Downloder CLI tool
 ## Requirements
-python3
-pip3
-git
+python3  
+pip3  
+git  
 
 ## Python packages
 requests
