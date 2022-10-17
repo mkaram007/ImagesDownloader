@@ -35,7 +35,7 @@ def login():
         print("Login failed! \n")
 
 
-def check():
+def auth_check():
     authenticated = False
     while 1:
         print("Please choose what you want to do")
