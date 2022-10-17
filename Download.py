@@ -9,8 +9,10 @@ def download_images():
     sources = get_website()
     download_dir = get_dir()
     for src in sources:
-        webs = requests.get(src)
-        open(download_dir + "/" + src.split('/')[-1], 'wb').write(webs.content)
+        print("Downloading...")
+        image_src = requests.get(src)
+        open(download_dir + "/" + src.split('/')[-1], 'wb').write(image_src.content)
+    print("Successfully downloaded, another website???")
 
 
 def get_website():

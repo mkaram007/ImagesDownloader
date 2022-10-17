@@ -1,6 +1,7 @@
 import hashlib
 from getpass import getpass
 from Download import download_images
+authenticated = False
 
 
 def signup():
@@ -39,7 +40,7 @@ def login():
 
 
 def user_choice():
-    authenticated = False
+    global authenticated
     while 1:
         print("Please choose what you want to do")
         print("1.Login")
@@ -51,7 +52,10 @@ def user_choice():
             if ch == 4:
                 signup()
             if ch == 1:
-                authenticated = login()
+                if not authenticated:
+                    authenticated = login()
+                else:
+                    print("You are already signed in")
             elif ch == 2:
                 if authenticated:
                     download_images()
