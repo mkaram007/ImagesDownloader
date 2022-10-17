@@ -1,8 +1,11 @@
 import requests
+from requests.auth import HTTPBasicAuth
 from bs4 import BeautifulSoup
 from pathlib import Path
 import os
 import tempfile
+import sys
+from getpass import getpass
 
 
 def download_images():
@@ -12,7 +15,8 @@ def download_images():
         print("Downloading...")
         image_src = requests.get(src)
         open(download_dir + "/" + src.split('/')[-1], 'wb').write(image_src.content)
-    print("Successfully downloaded, another website???")
+    print("Success, another website???")
+    download_images()
 
 
 def get_website():
@@ -26,12 +30,22 @@ def get_website():
         website = '{protocol}{website}'.format(protocol="https://", website=website)
         resp = requests.get(website)
     print(resp.status_code)
+    print(resp.text)
+    if resp.status_code == 401:
+        print("Unauthorized, please enter username and password for authentication")
+        username = input("Username: ")
+        password = getpass("Password: ")
+        resp = requests.get(website, auth=(username, password))
+        print(resp.text)
     sources = find_sources(website, resp)
     return sources
 
 
 def get_dir():
-    download_dir = input("Please enter the directory to save the downloaded images [./images}\n")
+    if not sys.stdout.isatty():
+        download_dir = ""
+    else:
+        download_dir = input("Please enter the directory to save the downloaded images [./images}\n")
     Path(download_dir).mkdir(parents=True, exist_ok=True)
     if not download_dir:
         download_dir = "images/"
