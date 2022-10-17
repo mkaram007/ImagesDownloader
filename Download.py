@@ -1,5 +1,4 @@
 import requests
-from requests.auth import HTTPBasicAuth
 from bs4 import BeautifulSoup
 from pathlib import Path
 import os
@@ -11,41 +10,58 @@ from getpass import getpass
 def download_images():
     sources = get_website()
     download_dir = get_dir()
-    for src in sources:
+    if len(sources) == 0:
+        print("No png images in the website you provided, try another website")
+        download_images()
+    decision = input("Number of images is: {number}, would you like to download? [Y,n]".format(number=len(sources)))
+    if decision == "Y" or decision == "y" or decision == "":
         print("Downloading...")
-        image_src = requests.get(src)
-        open(download_dir + "/" + src.split('/')[-1], 'wb').write(image_src.content)
-    print("Success, another website???")
-    download_images()
+        for src in sources:
+            print(src)
+            image_src = requests.get(src)
+            open(download_dir + "/" + src.split('/')[-1], 'wb').write(image_src.content)
+        print("Success, another website???")
+        download_images()
+    elif decision == "n" or decision == "N":
+        print("abort")
+        download_images()
 
 
 def get_website():
-    website = input("Please enter the website's URL [https://nxlog.co]\n")
+    website = input("Please enter the website's URL [nxlog.co]\n")
     if not website:
-        website = "https://nxlog.co"
-
+        website = "nxlog.co"
     try:
-        resp = requests.get(website)
-    except requests.exceptions.MissingSchema:
-        website = '{protocol}{website}'.format(protocol="https://", website=website)
-        resp = requests.get(website)
-    print(resp.status_code)
-    print(resp.text)
+        try:
+            resp = requests.get(website, allow_redirects=True)
+        except requests.exceptions.MissingSchema:
+            website = '{protocol}{website}'.format(protocol="http://", website=website)
+            resp = requests.get(website, allow_redirects=True)
+    except requests.exceptions.ConnectionError:
+        print("Can't connect to the website you entered, try again")
+        get_website()
+        resp = ""
+    #print(resp.history)
+    #print(resp.url)
+    #print(resp.status_code)
+    #print(resp.text)
     if resp.status_code == 401:
-        print("Unauthorized, please enter username and password for authentication")
-        username = input("Username: ")
-        password = getpass("Password: ")
-        resp = requests.get(website, auth=(username, password))
-        print(resp.text)
+        resp = basic_auth(website)
     sources = find_sources(website, resp)
     return sources
 
 
+def basic_auth(website):
+    print("Unauthorized, please enter username and password for authentication")
+    username = input("Username: ")
+    password = getpass("Password: ")
+    resp = requests.get(website, auth=(username, password))
+    #print(resp.text)
+    return resp
+
+
 def get_dir():
-    if not sys.stdout.isatty():
-        download_dir = ""
-    else:
-        download_dir = input("Please enter the directory to save the downloaded images [./images}\n")
+    download_dir = input("Please enter the directory to save the downloaded images [./images}\n")
     Path(download_dir).mkdir(parents=True, exist_ok=True)
     if not download_dir:
         download_dir = "images/"
@@ -76,6 +92,6 @@ def find_sources(website, resp):
                 sources.append('{website}/{src}'.format(website=website, src=src))
 
         except AttributeError:
-            print("No png images exist in this website")
-    print(sources)
+            print("Found an image that's not in png extension")
+    #print(sources)
     return sources
