@@ -1,31 +1,65 @@
 import requests
 from bs4 import BeautifulSoup
+from pathlib import Path
+import os
+import tempfile
 
 
 def download_images():
-    url_link = input("Please enter the website's URL\n")  # Replace this with the website's URL
+    sources = get_website()
+    download_dir = get_dir()
+    for src in sources:
+        webs = requests.get(src)
+        open(download_dir + "/" + src.split('/')[-1], 'wb').write(webs.content)
+
+
+def get_website():
+    website = input("Please enter the website's URL [https://nxlog.co]\n")
+    if not website:
+        website = "https://nxlog.co"
+
     try:
-        get_url = requests.get(url_link, headers={"User-Agent": "Mozilla/5.0"})
+        resp = requests.get(website)
     except requests.exceptions.MissingSchema:
-        url_link = "https://"+url_link
-        get_url = requests.get(url_link, headers={"User-Agent": "Mozilla/5.0"})
-    print(get_url.status_code)
-    soup = BeautifulSoup(get_url.text, 'html.parser')
+        website = '{protocol}{website}'.format(protocol="https://", website=website)
+        resp = requests.get(website)
+    print(resp.status_code)
+    sources = find_sources(website, resp)
+    return sources
+
+
+def get_dir():
+    download_dir = input("Please enter the directory to save the downloaded images [./images}\n")
+    Path(download_dir).mkdir(parents=True, exist_ok=True)
+    if not download_dir:
+        download_dir = "images/"
+    if not validate_path(download_dir):
+        print("You are not permitted to download files here")
+        download_dir = get_dir()
+    return download_dir
+
+
+def validate_path(path):
+    try:
+        os.makedirs(path, exist_ok=True)
+        temp_dir_path = tempfile.mkdtemp(dir=path)
+        os.rmdir(temp_dir_path)
+        return True
+    except OSError:
+        return False
+
+
+def find_sources(website, resp):
+    soup = BeautifulSoup(resp.text, 'html.parser')
     images = soup.find_all('img')
-    print(images)
-    image_sources = []
     sources = []
-    print(images)
     for image in images:
         try:
             if image.get('src').split('.')[-1].lower() == "png":
                 src = image.get('src')
-                sources.append('{url_link}/{src}'.format(url_link=url_link, src=src))
+                sources.append('{website}/{src}'.format(website=website, src=src))
 
         except AttributeError:
             print("No png images exist in this website")
     print(sources)
-    for src in sources:
-        print(src)
-        webs = requests.get(src)
-        open('images/' + src.split('/')[-1], 'wb').write(webs.content)
+    return sources
