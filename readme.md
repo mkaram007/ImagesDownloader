@@ -7,8 +7,7 @@ virtualenv
 # How to use the tool
 ## Clone the repository
 ```
-cd /opt
-git clone https://github.com/mkaram007/ImagesDownloader
+git clone https://github.com/mkaram007/ImagesDownloader /opt/ImagesDownloader
 ```
 ## Create your python virtual environment
 ```
@@ -16,10 +15,10 @@ sudo python3 -m venv /opt/ImagesDownloader/venv
 ```
 ## Install python dependencies
 ```
-/opt/ImagesDownloader/venv/bin/pip3 install -r /opt/ImagesDownloader/lib/requirements.txt  
+sudo /opt/ImagesDownloader/venv/bin/pip3 install -r /opt/ImagesDownloader/lib/requirements.txt  
 ```
 
 ## Run the tool using the following command
 ```
-python3 main.py
+/opt/ImagesDownloader/venv/bin/python3 /opt/ImagesDownloader/main.py
 ```
