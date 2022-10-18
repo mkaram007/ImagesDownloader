@@ -19,6 +19,8 @@ def download_images():
         for src in sources:
             print(src)
             image_src = requests.get(src)
+            # Writing the image (Downloading) with the same name of the website
+            # wb is writing in binary format (Image)
             open(download_dir + "/" + src.split('/')[-1], 'wb').write(image_src.content)
         again = input("Success, another website???")
         if not again or again == "y" or again == "Y":
@@ -38,9 +40,11 @@ def get_website():
     try:
         try:
             resp = requests.get(website, allow_redirects=True)
+        # Allowing providing website without schema
         except requests.exceptions.MissingSchema:
             website = '{protocol}{website}'.format(protocol="http://", website=website)
             resp = requests.get(website, allow_redirects=True)
+    # Handling no Internet connectivity and wrong website exceptions
     except requests.exceptions.ConnectionError:
         print("Can't connect to the website you entered, try again")
         get_website()
@@ -74,7 +78,7 @@ def get_dir():
         download_dir = get_dir()
     return download_dir
 
-
+# Assuring permitted location
 def validate_path(path):
     try:
         os.makedirs(path, exist_ok=True)
@@ -86,11 +90,13 @@ def validate_path(path):
 
 
 def find_sources(website, resp):
+    # Parsing website, finding files with tag <img>
     soup = BeautifulSoup(resp.text, 'html.parser')
     images = soup.find_all('img')
     sources = []
     for image in images:
         try:
+            # Finding png images (Case insensitive)
             if image.get('src').split('.')[-1].lower() == "png":
                 src = image.get('src')
                 sources.append('{website}/{src}'.format(website=website, src=src))
