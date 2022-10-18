@@ -61,10 +61,10 @@ def basic_auth(website):
 
 
 def get_dir():
-    download_dir = input("Please enter the directory to save the downloaded images [./images}\n")
+    download_dir = input("Please enter the directory to save the downloaded images [~/ImagesDownloader/images}\n")
     Path(download_dir).mkdir(parents=True, exist_ok=True)
     if not download_dir:
-        download_dir = "/opt/ImagesDownloader/images/"
+        download_dir = "~/ImagesDownloader/images/"
     if not validate_path(download_dir):
         print("You are not permitted to download files here")
         download_dir = get_dir()
