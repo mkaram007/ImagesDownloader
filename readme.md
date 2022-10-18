@@ -3,7 +3,11 @@
 python3  
 pip3  
 git  
-virtualenv  
+
+pip3 dependency: virtualenv  
+```
+sudo pip3 install virtualenv 
+```
 # How to use the tool
 ## Clone the repository
 ```
