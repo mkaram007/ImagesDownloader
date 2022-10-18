@@ -64,7 +64,7 @@ def get_dir():
     download_dir = input("Please enter the directory to save the downloaded images [~/ImagesDownloader/images}\n")
     Path(download_dir).mkdir(parents=True, exist_ok=True)
     if not download_dir:
-        download_dir = "~/ImagesDownloader/images/"
+        download_dir = "{home_path}/ImagesDownloader/images/".format(home_path=Path.home())
     if not validate_path(download_dir):
         print("You are not permitted to download files here")
         download_dir = get_dir()
