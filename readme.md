@@ -11,11 +11,11 @@ git clone https://github.com/mkaram007/ImagesDownloader ~/ImagesDownloader
 ```
 ## Create your python virtual environment
 ```
-sudo python3 -m venv ~/ImagesDownloader/venv
+python3 -m venv ~/ImagesDownloader/venv
 ```
 ## Install python dependencies
 ```
-sudo ~/ImagesDownloader/venv/bin/pip3 install -r ~/ImagesDownloader/lib/requirements.txt  
+~/ImagesDownloader/venv/bin/pip3 install -r ~/ImagesDownloader/lib/requirements.txt  
 ```
 
 ## Run the tool using the following command
