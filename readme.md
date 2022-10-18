@@ -3,26 +3,20 @@
 python3  
 pip3  
 git  
-
-## Python packages
-requests
-```
-pip3 install requests
-```
-bs4
-```
-pip3 install bs4
-```
-
+virtualenv  
 # How to use the tool
 ## Clone the repository
 ```
+cd /opt
 git clone https://github.com/mkaram007/ImagesDownloader
 ```
-## Change the directory to the tools directory
-```
-cd ImagesDownloader
-```
+## Create your python virtual environment
+sudo python3 -m venv /opt/ImagesDownloader/venv
+
+## Install python dependencies
+/opt/ImagesDownloader/venv/bin/pip3 install -r /opt/ImagesDownloader/lib/requirements.txt  
+
+
 ## Run the tool using the following command
 ```
 python3 main.py
