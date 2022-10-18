@@ -20,8 +20,12 @@ def download_images():
             print(src)
             image_src = requests.get(src)
             open(download_dir + "/" + src.split('/')[-1], 'wb').write(image_src.content)
-        print("Success, another website???")
-        download_images()
+        again = input("Success, another website???")
+        if not again or again == "y" or again == "Y":
+            download_images()
+        else:
+            print("Thanks for using Images Downloader")
+            return
     elif decision == "n" or decision == "N":
         print("abort")
         download_images()
