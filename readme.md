@@ -1,4 +1,4 @@
-# Welcome to the Image Downloder CLI tool
+# Welcome to the Image Downloder Linux CLI tool
 ### Image Downloader CLI tool allows its user to download only file with html tag <img> and extension .png in the website the user provides
 ### The downloaded files would be saved in the directory the user provides
 ### If the user-provided website required authentication, the user would provide username and password credentials
